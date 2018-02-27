@@ -11,7 +11,7 @@ const APP_CONSTANTS = require('../../app.constants');
 const userService = new UsersService();
 
 router.post('/login', (req, res, next) => {
-  userService.login(req.body)
+  userService.login({username: req.body.username})
   .then(user => {
     const passwordValid = bcrypt.compareSync(req.body.password, user.password);
     if (!passwordValid) {
