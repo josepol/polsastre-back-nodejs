@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var index = require('./app.route');
 var users = require('./services/users/users.route');
 
-mongoose.connect('mongodb://localhost/petify');
+mongoose.connect('mongodb://localhost/polsastre');
 
 var app = express();
 

@@ -20,7 +20,7 @@ router.post('/login', (req, res, next) => {
     let token = jwt.sign({ id: user._id }, APP_CONSTANTS.SECRET_KEY, {
       expiresIn: APP_CONSTANTS.TOKEN_EXPIRATION_TIME
     });
-    res.status('200').send({ auth: true, token: token });
+    res.status('200').send({ token });
   })
   .catch(error => {
     res.status('401');
@@ -39,7 +39,7 @@ router.post('/register', (req, res, next) => {
       expiresIn: APP_CONSTANTS.TOKEN_EXPIRATION_TIME
     });
     res.status(200);
-    res.send({auth: true, token: token});
+    res.send({ token });
   })
   .catch(error => {
     res.status('400');
