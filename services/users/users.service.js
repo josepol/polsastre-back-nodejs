@@ -13,6 +13,17 @@ class UsersService {
         });
     }
 
+    refresh(token) {
+        return new Promise((resolve, reject) => {
+            UserModel.findOne({_id: token}, (error, response) => {
+                if (!response || error) {
+                    reject(error);
+                }
+                resolve(response); 
+            });
+        });
+    }
+
     register(userRegister) {
         const userModel = new UserModel(userRegister);
         return new Promise(resolve => {
