@@ -56,10 +56,18 @@ router.get('/refresh', (req, res, next) => {
 
 router.post('/register', (req, res, next) => {
 	const userParsed = {
-		...req.body,
+		username: req.body.username,
 		password: bcrypt.hashSync(req.body.password, 8)
 	}
+	const userProfileParsed = {
+		name: req.body.name,
+		username: req.body.username
+	}
 	userService.register(userParsed)
+	.then(user => {
+		userService.registerUserProfile(user.id, userProfileParsed);
+		return user;
+	})
 	.then(user => {
 		let token = jwt.sign({ id: user._id }, APP_CONSTANTS.SECRET_KEY, {
 			expiresIn: APP_CONSTANTS.TOKEN_EXPIRATION_TIME
@@ -100,6 +108,31 @@ router.get('/profile', (req, res, next) => {
 	userService.listOne(payload.id)
 	.then(user => {
 		res.status('200').send({ ...user });
+	})
+	.catch(error => {
+		res.status('401');
+		res.send(error);
+	});
+});
+
+router.get('/cancel-account', (req, res, next) => {
+	const authorization = req.headers.authorization;
+	if (!authorization) {
+		res.status(403).send({ message: "No token" });
+	}
+	const bearerToken = authorization.split(' ')[1];
+	const payload = jwt.decode(bearerToken, APP_CONSTANTS.TOKEN_EXPIRATION_TIME);
+
+	if (payload.exp <= moment().unix()) {
+		res.status(401).send({ message: "Token expired" });
+	}
+
+	Promise.all([
+		userService.deleteUser(payload.id), 
+		userService.deleteUserProfile(payload.id)
+	])
+	.then(status => {
+		res.status('200').send({ status: 'OK' });
 	})
 	.catch(error => {
 		res.status('401');

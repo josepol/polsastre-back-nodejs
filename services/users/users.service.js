@@ -36,6 +36,16 @@ class UsersService {
         });
     }
 
+    registerUserProfile(_id, userProfile) {
+        const userProfileModel = new UserProfileModel({ _id, ...userProfile });
+        return new Promise(resolve => {
+            userProfileModel.save((error, response) => {
+                if (error) resolve(error);
+                resolve(response);
+            });
+        });
+    }
+
     listAll() {
         return new Promise((resolve, reject) => {
             UserModel.find({}, (error, users) => {
@@ -57,6 +67,28 @@ class UsersService {
                     name: user.name,
                     username: user.username
                 });
+            });
+        });
+    }
+
+    deleteUser(token) {
+        return new Promise((resolve, reject) => {
+            UserModel.deleteOne({ _id: token }, (error, response) => {
+                if (error || response.n === 0) {
+                    reject('error');
+                }
+                resolve({ status: response.n });
+            });
+        });
+    }
+
+    deleteUserProfile(token) {
+        return new Promise((resolve, reject) => {
+            UserProfileModel.deleteOne({ _id: token }, (error, response) => {
+                if (error || response.n === 0) {
+                    reject(error);
+                }
+                resolve({ status: response.n });
             });
         });
     }
