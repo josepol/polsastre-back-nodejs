@@ -69,7 +69,7 @@ router.post('/register', (req, res, next) => {
 		return user;
 	})
 	.then(user => {
-		let token = jwt.sign({ id: user._id }, APP_CONSTANTS.SECRET_KEY, {
+		let token = jwt.sign({id: user._id}, APP_CONSTANTS.SECRET_KEY, {
 			expiresIn: APP_CONSTANTS.TOKEN_EXPIRATION_TIME
 		});
 		res.status(200);
@@ -77,7 +77,7 @@ router.post('/register', (req, res, next) => {
 	})
 	.catch(error => {
 		res.status('400');
-		res.send(error);
+		res.send({code: error.code});
 	});
 });
 

@@ -28,9 +28,12 @@ class UsersService {
 
     register(userRegister) {
         const userModel = new UserModel(userRegister);
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             userModel.save((error, response) => {
-                if (error) resolve(error);
+                if (error)  {
+                    reject(error);
+                    return;
+                }
                 resolve(response);
             });
         });
@@ -38,9 +41,12 @@ class UsersService {
 
     registerUserProfile(_id, userProfile) {
         const userProfileModel = new UserProfileModel({ _id, ...userProfile });
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             userProfileModel.save((error, response) => {
-                if (error) resolve(error);
+                if (error)  {
+                    reject(error);
+                    return;
+                }
                 resolve(response);
             });
         });
