@@ -1,13 +1,16 @@
+'use strict'
+
 const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
-const router = express.Router();
+
 const UsersService = require('./users.service');
-const debug = require('debug')('app');
 const USERS_CONSTANTS = require('./users.constants');
 const APP_CONSTANTS = require('../../app.constants');
+
+const router = express.Router();
 
 const userService = new UsersService();
 

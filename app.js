@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 
 var index = require('./app.route');
 var users = require('./services/users/users.route');
+var blogs = require('./services/blog/blog.route');
 
 mongoose.connect('mongodb://localhost/polsastre');
 
@@ -23,6 +24,7 @@ app.use(cors());
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/blogs', blogs)
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
