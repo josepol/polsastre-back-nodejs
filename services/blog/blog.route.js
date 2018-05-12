@@ -16,7 +16,8 @@ router.get('/all', middleware, (req, res) => {
 });
 
 router.get('/categories/all', middleware, (req, res) => {
-
+    blogService.getCategories().then(categories => res.send(categories))
+    .catch(error => res.status(400).send(error));
 });
 
 router.get('recentsAndPopulars/all', middleware, (req, res) => {
