@@ -1,9 +1,11 @@
 'use strict'
 
+const moment = require('moment');
+
 const BlogModel = require('./blog.model');
 const CategoryModel = require('./category.model');
 
-class blogService {
+class BlogService {
     constructor() {}
 
     getBlogs() {
@@ -23,6 +25,27 @@ class blogService {
             });
         });
     }
+
+    addPost(post) {
+        return new Promise((resolve, reject) => {
+            const postMapped = this.addPostMapper(post);
+            return BlogModel.insertMany(postMapped, (error, records) => {
+                if (error) reject(error);
+                resolve(records);
+            });
+        });
+    }
+
+    addPostMapper(post) {
+        return {
+            ...post,
+            createdAt: moment().unix(),
+            modifiedAt: moment().unix(),
+            creator: 'polsastre3@gmail.com',
+            creatorName: 'Jose Pol',
+            comments: 0
+        }
+    }
 }
 
-module.exports = blogService;
+module.exports = BlogService;

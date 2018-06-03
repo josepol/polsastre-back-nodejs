@@ -20,6 +20,11 @@ router.get('/categories/all', (req, res) => {
     .catch(error => res.status(400).send(error));
 });
 
+router.post('/add-post', (req, res) => {
+    blogService.addPost(req.body).then(addPostStatus => res.send(addPostStatus))
+    .catch(error => res.status(400).send(error));
+});
+
 router.get('recentsAndPopulars/all', (req, res) => {
 
 });

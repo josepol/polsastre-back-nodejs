@@ -22,10 +22,10 @@ router.post('/login', (req, res, next) => {
 		if (!passwordValid) {
 			res.status(401).send({ auth: false, token: null });
 		}
-		let token = jwt.sign({ id: user._id }, APP_CONSTANTS.SECRET_KEY, {
+		let token = jwt.sign({ id: user._id, rol: user.rol }, APP_CONSTANTS.SECRET_KEY, {
 			expiresIn: APP_CONSTANTS.TOKEN_EXPIRATION_TIME
 		});
-		res.status('200').send({ token });
+		res.status('200').send({ token, isAdmin: user.rol === 0 ? true : false });
 	})
 	.catch(error => {
 		res.status('401');
@@ -47,10 +47,10 @@ router.get('/refresh', middleware, (req, res, next) => {
 
 	userService.refresh(payload.id)
 	.then(user => {
-		let token = jwt.sign({ id: user._id }, APP_CONSTANTS.SECRET_KEY, {
+		let token = jwt.sign({ id: user._id, rol: user.rol }, APP_CONSTANTS.SECRET_KEY, {
 			expiresIn: APP_CONSTANTS.TOKEN_EXPIRATION_TIME
 		});
-		res.status('200').send({ token });
+		res.status('200').send({ token, isAdmin: user.rol === 0 ? true : false });
 	})
 	.catch(error => {
 		res.status('401');
