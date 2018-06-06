@@ -37,10 +37,11 @@ class BlogService {
     }
 
     addPostMapper(post) {
+        const today = moment().valueOf();
         return {
             ...post,
-            createdAt: moment().unix(),
-            modifiedAt: moment().unix(),
+            createdAt: today,
+            modifiedAt: today,
             creator: 'polsastre3@gmail.com',
             creatorName: 'Jose Pol',
             comments: 0
