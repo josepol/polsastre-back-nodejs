@@ -6,6 +6,7 @@ const BlogModel = require('./blog.model');
 const CategoryModel = require('./category.model');
 
 class BlogService {
+
     constructor() {}
 
     getBlogs() {
@@ -30,6 +31,15 @@ class BlogService {
         return new Promise((resolve, reject) => {
             const postMapped = this.addPostMapper(post);
             return BlogModel.insertMany(postMapped, (error, records) => {
+                if (error) reject(error);
+                resolve(records);
+            });
+        });
+    }
+
+    deletePosts(posts) {
+        return new Promise((resolve, reject) => {
+            return BlogModel.remove({'_id': {'$in': posts}}, (error, records) => {
                 if (error) reject(error);
                 resolve(records);
             });

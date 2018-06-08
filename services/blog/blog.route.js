@@ -25,6 +25,11 @@ router.post('/add-post', (req, res) => {
     .catch(error => res.status(400).send(error));
 });
 
+router.post('/delete-post', (req, res) => {
+    blogService.deletePosts(req.body).then(deletePostsStatus => res.send(deletePostsStatus))
+    .catch(error => res.status(400).send(error));
+});
+
 router.get('recentsAndPopulars/all', (req, res) => {
 
 });
