@@ -30,6 +30,11 @@ router.post('/delete-post', (req, res) => {
     .catch(error => res.status(400).send(error));
 });
 
+router.post('/modify-post', (req, res) => {
+    blogService.modifyPosts(req.body).then(modifyPostStatus => res.send(modifyPostStatus))
+    .catch(error => res.status(400).send(error));
+});
+
 router.get('recentsAndPopulars/all', (req, res) => {
 
 });

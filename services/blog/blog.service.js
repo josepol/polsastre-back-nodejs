@@ -46,6 +46,15 @@ class BlogService {
         });
     }
 
+    modifyPosts(post) {
+        return new Promise((resolve, reject) => {
+            return BlogModel.update({'_id': post.id}, {'_id': post.id, ...post.post}, (error, records) => {
+                if (error) reject(error);
+                resolve(records);
+            });
+        });
+    }
+
     addPostMapper(post) {
         const today = moment().valueOf();
         return {
