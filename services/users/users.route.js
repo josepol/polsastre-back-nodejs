@@ -50,7 +50,7 @@ router.get('/refresh', middleware, (req, res, next) => {
 		let token = jwt.sign({ id: user._id, rol: user.rol }, APP_CONSTANTS.SECRET_KEY, {
 			expiresIn: APP_CONSTANTS.TOKEN_EXPIRATION_TIME
 		});
-		res.status('200').send({ token, isAdmin: user.rol === 0 ? true : false });
+		res.status('200').send({ token, isAdmin: user.rol === 0 ? true : false, testing: '123123' });
 	})
 	.catch(error => {
 		res.status('401');
