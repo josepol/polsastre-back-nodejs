@@ -13,7 +13,7 @@ class BlogService {
         return new Promise((resolve, reject) => {
             return BlogModel.find({}, (error, blogs) => {
                 if (error) reject(error);
-                resolve(blogs);
+                resolve(blogs.sort(function(a, b){return b.createdAt-a.createdAt}));
             });
         });
     }
