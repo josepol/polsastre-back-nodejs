@@ -21,7 +21,15 @@ const middleware = (req, res, next) => {
         return;
     }
 
-    userService.refresh(payload.id).then(user => next())
+    userService.refresh(payload.id).then(user => {
+        const userNext = user;
+        userService.listOne(payload.id).then(userProfile => {
+            userNext.name = userProfile.name;
+            userNext.isAdmin = user.rol === 0;
+            req.user = userNext;
+            next();
+        })
+    })
     .catch(error => res.status('401').send(error));
 }
 

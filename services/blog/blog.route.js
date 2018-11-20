@@ -35,12 +35,18 @@ router.post('/modify-post', (req, res) => {
     .catch(error => res.status(400).send(error));
 });
 
-router.get('recentsAndPopulars/all', (req, res) => {
-
+router.get('/comments/:id', (req, res) => {
+    blogService.getComments(req.params.id).then(comments => res.send(comments))
+    .catch(error => res.status(400).send(error));
 });
 
-router.get('tags/all', (req, res) => {
-
+router.post('/add-comments', middleware, (req, res) => {
+    blogService.addComments(req.body.text, req.body.blogId, req.user.name, req.user.isAdmin).then(comments => res.send(comments))
+    .catch(error => res.status(400).send(error));
 });
+
+router.get('recentsAndPopulars/all', (req, res) => {});
+
+router.get('tags/all', (req, res) => {});
 
 module.exports = router;

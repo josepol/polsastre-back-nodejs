@@ -4,6 +4,7 @@ const moment = require('moment');
 
 const BlogModel = require('./blog.model');
 const CategoryModel = require('./category.model');
+const CommentsModel = require('./comments.model');
 
 class BlogService {
 
@@ -55,6 +56,25 @@ class BlogService {
         });
     }
 
+    getComments(id) {
+        return new Promise((resolve, reject) => {
+            return CommentsModel.find({blogId: id}, (error, comments) => {
+                if (error) reject(error);
+                resolve(comments.sort(function(a, b){return a.date-b.date}));
+            });
+        });
+    }
+
+    addComments(comment, blogId, username, isAdmin) {
+        return new Promise((resolve, reject) => {
+            const commentMapped = this.addCommentMapper(comment, username, blogId, isAdmin);
+            return CommentsModel.insertMany(commentMapped, (error, records) => {
+                if (error) reject(error);
+                resolve(records);
+            });
+        });
+    }
+
     addPostMapper(post) {
         const today = moment().valueOf();
         return {
@@ -64,6 +84,17 @@ class BlogService {
             creator: 'polsastre3@gmail.com',
             creatorName: 'Jose Pol',
             comments: 0
+        }
+    }
+    
+    addCommentMapper(text, userName, blogId, isAdmin) {
+        const date = moment().valueOf();
+        return {
+            text,
+            date,
+            userName,
+            blogId,
+            isAdmin
         }
     }
 }
