@@ -1,10 +1,9 @@
 'use strict'
 
-const mongoose = require('mongoose');
 const express = require('express');
 
 const BlogService = require('./blog.service');
-const middleware = require('../middleware');
+const Middleware = require('../middleware');
 
 const router = express.Router();
 
@@ -20,17 +19,17 @@ router.get('/categories/all', (req, res) => {
     .catch(error => res.status(400).send(error));
 });
 
-router.post('/add-post', (req, res) => {
+router.post('/add-post', Middleware.middlewareAdmin, (req, res) => {
     blogService.addPost(req.body).then(addPostStatus => res.send(addPostStatus))
     .catch(error => res.status(400).send(error));
 });
 
-router.post('/delete-post', (req, res) => {
+router.post('/delete-post', Middleware.middlewareAdmin, (req, res) => {
     blogService.deletePosts(req.body).then(deletePostsStatus => res.send(deletePostsStatus))
     .catch(error => res.status(400).send(error));
 });
 
-router.post('/modify-post', (req, res) => {
+router.post('/modify-post', Middleware.middlewareAdmin, (req, res) => {
     blogService.modifyPosts(req.body).then(modifyPostStatus => res.send(modifyPostStatus))
     .catch(error => res.status(400).send(error));
 });
@@ -40,7 +39,7 @@ router.get('/comments/:id', (req, res) => {
     .catch(error => res.status(400).send(error));
 });
 
-router.post('/add-comments', middleware, (req, res) => {
+router.post('/add-comments', Middleware.middlewareUser, (req, res) => {
     blogService.addComments(req.body.text, req.body.blogId, req.user.name, req.user.isAdmin).then(comments => res.send(comments))
     .catch(error => res.status(400).send(error));
 });

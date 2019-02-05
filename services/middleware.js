@@ -8,10 +8,35 @@ const UserService = require('./users/users.service');
 
 const userService = new UserService();
 
-const middleware = (req, res, next) => {
+const middlewareUser = (req, res, next) => {
+    authentication(req, res).then(({userNext, userProfile}) => {
+        userNext.name = userProfile.name;
+        userNext.isAdmin = userNext.rol === 0;
+        req.user = userNext;
+        next();
+    });
+}
+
+const middlewareAdmin = (req, res, next) => {
+    authentication(req, res).then(({userNext, userProfile}) => {
+        userNext.name = userProfile.name;
+        userNext.isAdmin = userNext.rol === 0;
+        req.user = userNext;
+        if (userNext.isAdmin) {
+            next();
+            return;
+        }
+        res.status('403').send({message: "Not ADMIN"});
+    });
+}
+
+const authentication = (req, res) => {
     const authorization = req.headers.authorization;
 
-    if (!authorization) res.status(403).send({ message: "No token" });
+    if (!authorization) {
+        res.status(403).send({ message: "No token" });
+        return;
+    };
 
     const bearerToken = authorization.split(' ')[1];
     const payload = jwt.decode(bearerToken, APP_CONSTANTS.TOKEN_EXPIRATION_TIME);
@@ -21,16 +46,27 @@ const middleware = (req, res, next) => {
         return;
     }
 
-    userService.refresh(payload.id).then(user => {
-        const userNext = user;
-        userService.listOne(payload.id).then(userProfile => {
-            userNext.name = userProfile.name;
-            userNext.isAdmin = user.rol === 0;
-            req.user = userNext;
-            next();
+    return new Promise((resolve, reject) => {
+        userService.refresh(payload.id).then(user => {
+            const userNext = user;
+            userService.listOne(payload.id).then(userProfile => {
+                userNext.name = userProfile.name;
+                userNext.isAdmin = userNext.rol === 0;
+                req.user = userNext;
+                resolve({
+                    userNext,
+                    userProfile
+                });
+            })
         })
-    })
-    .catch(error => res.status('401').send(error));
+        .catch(error => {
+            res.status('401').send(error);
+            reject();
+        });
+    });
 }
 
-module.exports = middleware;
+module.exports = {
+    middlewareUser,
+    middlewareAdmin
+};

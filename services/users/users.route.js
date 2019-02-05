@@ -9,7 +9,7 @@ const moment = require('moment');
 const UsersService = require('./users.service');
 const USERS_CONSTANTS = require('./users.constants');
 const APP_CONSTANTS = require('../../app.constants');
-const middleware = require('../middleware');
+const Middleware = require('../middleware');
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ router.post('/login', (req, res, next) => {
 	});
 });
 
-router.get('/refresh', middleware, (req, res, next) => {
+router.get('/refresh', Middleware.middlewareUser, (req, res, next) => {
 	const authorization = req.headers.authorization;
 	if (!authorization) {
 		res.status(403).send({ message: "No token" });

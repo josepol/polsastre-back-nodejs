@@ -14,7 +14,12 @@ class BlogService {
         return new Promise((resolve, reject) => {
             return BlogModel.find({}, (error, blogs) => {
                 if (error) reject(error);
-                resolve(blogs.sort(function(a, b){return b.createdAt-a.createdAt}));
+                const blogsOrdered = blogs.sort((a, b) => b.createdAt-a.createdAt);
+                for (let i = 0; i < blogsOrdered.length; i++) {
+                    blogsOrdered[i].createdAt = undefined;
+                    blogsOrdered[i].modifiedAt = undefined;
+                }
+                resolve(blogsOrdered);
             });
         });
     }
