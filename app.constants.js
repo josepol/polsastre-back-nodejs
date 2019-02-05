@@ -1,4 +1,4 @@
 module.exports = {
-    SECRET_KEY: 'Hjswe1..982dlf',
+    SECRET_KEY: process.env.SECRET,
     TOKEN_EXPIRATION_TIME: 86400
 }
